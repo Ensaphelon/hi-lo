@@ -4,7 +4,12 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Form from './Form';
-import { generateHash, getRandomNumber, substractFromBalance } from '../utils';
+import {
+  generateHash,
+  getRandomNumber,
+  substractFromBalance,
+  generateLastRoundResult,
+} from '../utils';
 
 class App extends React.Component {
   constructor(props) {
@@ -13,7 +18,7 @@ class App extends React.Component {
     this.state = {
       hash: generateHash(number),
       number,
-      winsCounter: 0,
+      lastRoundResult: null,
       balance: 100,
       betIsProcessing: false,
     };
@@ -43,6 +48,10 @@ class App extends React.Component {
         betIsProcessing: false,
         number: newNumber,
         hash: generateHash(newNumber),
+        lastRoundResult: {
+          isWin,
+          number,
+        },
       });
     }
   }
@@ -52,9 +61,9 @@ class App extends React.Component {
     const {
       hash,
       number,
-      winsCounter,
       balance,
       betIsProcessing,
+      lastRoundResult,
     } = this.state;
     return (
       <div className="apps">
@@ -77,8 +86,7 @@ class App extends React.Component {
             <div>
               <Typography variant="headline">Result</Typography>
               <Typography>
-                {`${winsCounter} `}
-                wins!
+                {generateLastRoundResult(lastRoundResult)}
               </Typography>
             </div>
             <div>

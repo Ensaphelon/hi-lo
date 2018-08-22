@@ -80,3 +80,15 @@ export const substractFromBalance = (bet, balance) => {
   const result = balance - bet;
   return result > 0 ? result : 0;
 };
+
+/**
+ * Generate message for statistics of last round
+ */
+
+export const generateLastRoundResult = (result) => {
+  if (result) {
+    const { isWin, number } = result;
+    return `${number} ${isWin ? 'win' : 'lose'}!`;
+  }
+  return '';
+};
