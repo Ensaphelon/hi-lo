@@ -71,3 +71,12 @@ export const getRandomNumber = () => Math.floor(Math.random() * 100) + 1;
  */
 
 export const generateHash = number => md5(number.toString());
+
+/**
+ * Substract new bet from current balance
+ */
+
+export const substractFromBalance = (bet, balance) => {
+  const result = balance - bet;
+  return result > 0 ? result : 0;
+};

@@ -48,8 +48,18 @@ export default class Form extends React.Component {
     });
   }
 
+  submit = (e, betType) => {
+    e.preventDefault();
+    const { bet, number, payoutRate } = this.state;
+    const { makeBet } = this.props;
+    if (bet && number) {
+      makeBet(bet, number, payoutRate, betType);
+    }
+  }
+
   render() {
-    const { changeBet, changeNumber } = this;
+    const { changeBet, changeNumber, submit } = this;
+    const { betIsProcessing } = this.props;
     const {
       bet,
       number,
@@ -68,7 +78,7 @@ export default class Form extends React.Component {
                 onChange={changeBet}
               />
             </FormControl>
-            <Button variant="contained">
+            <Button onClick={e => submit(e, 'hi')} disabled={betIsProcessing} type="submit" variant="contained">
               Bet Hi
             </Button>
             {number ? <WinningConditions winPercentage={winPercentage} payoutRate={payoutRate} number={number} type="hi" /> : '' }
@@ -82,7 +92,7 @@ export default class Form extends React.Component {
                 onChange={changeNumber}
               />
             </FormControl>
-            <Button variant="contained">
+            <Button onClick={e => submit(e, 'lo')} disabled={betIsProcessing} type="submit" variant="contained">
               Bet Lo
             </Button>
             {number ? <WinningConditions winPercentage={winPercentage} payoutRate={payoutRate} number={number} type="lo" /> : '' }
