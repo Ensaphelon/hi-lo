@@ -13,6 +13,8 @@
   "author": "Ramil Musaev",
   "license": "ISC",
   "dependencies": {
+    "@material-ui/core": "^1.5.1",
+    "js-md5": "^0.7.3",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
     "react-hot-loader": "^4.3.4"
@@ -24,6 +26,7 @@
     "babel-loader": "^7.1.5",
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
     "eslint": "^5.4.0",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-config-airbnb-base": "^13.1.0",
