@@ -1,5 +1,7 @@
 # Hi-Lo game
 
+[Demo](http://honorable-father.surge.sh/)
+
 ## Installation
 
 * npm install | make install
