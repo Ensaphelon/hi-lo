@@ -3,6 +3,7 @@ import Grid from '@material-ui/core/Grid';
 import Input from '@material-ui/core/Input';
 import FormControl from '@material-ui/core/FormControl';
 import Button from '@material-ui/core/Button';
+import AutoBet from './AutoBet';
 import WinningConditions from './WinningConditions';
 import { getWinningChance, getPayoutRate, correctNumber } from '../utils';
 
@@ -59,7 +60,7 @@ export default class Form extends React.Component {
 
   render() {
     const { changeBet, changeNumber, submit } = this;
-    const { betIsProcessing } = this.props;
+    const { betIsProcessing, makeAutoBet } = this.props;
     const {
       bet,
       number,
@@ -81,6 +82,13 @@ export default class Form extends React.Component {
             <Button onClick={e => submit(e, 'hi')} disabled={betIsProcessing} type="submit" variant="contained">
               Bet Hi
             </Button>
+            <AutoBet
+              bet={bet}
+              number={number}
+              payoutRate={payoutRate}
+              makeAutoBet={makeAutoBet}
+              type="hi"
+            />
             {number ? <WinningConditions winPercentage={winPercentage} payoutRate={payoutRate} number={number} type="hi" /> : '' }
           </Grid>
           <Grid item xs={12} sm={12} md={5}>
@@ -95,6 +103,13 @@ export default class Form extends React.Component {
             <Button onClick={e => submit(e, 'lo')} disabled={betIsProcessing} type="submit" variant="contained">
               Bet Lo
             </Button>
+            <AutoBet
+              bet={bet}
+              number={number}
+              payoutRate={payoutRate}
+              makeAutoBet={makeAutoBet}
+              type="lo"
+            />
             {number ? <WinningConditions winPercentage={winPercentage} payoutRate={payoutRate} number={number} type="lo" /> : '' }
           </Grid>
         </Grid>

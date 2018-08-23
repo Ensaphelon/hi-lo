@@ -1,5 +1,6 @@
 import React from 'react';
 import { hot } from 'react-hot-loader';
+import { times } from 'lodash';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
@@ -9,6 +10,8 @@ import {
   getRandomNumber,
   substractFromBalance,
   generateLastRoundResult,
+  isWin,
+  calcPrize,
 } from '../utils';
 
 class App extends React.Component {
@@ -21,6 +24,7 @@ class App extends React.Component {
       lastRoundResult: null,
       balance: 100,
       betIsProcessing: false,
+      autoBetHistory: [],
     };
   }
 
@@ -33,31 +37,66 @@ class App extends React.Component {
   makeBet = (bet, guessingNumber, payoutRate, betType) => {
     const { number, balance } = this.state;
     if (bet <= balance) {
-      const isWin = (betType === 'hi' && guessingNumber < number) || (betType === 'lo' && guessingNumber > number);
-      this.setState({
-        betIsProcessing: true,
-        balance: substractFromBalance(bet, balance),
-      });
-      if (isWin) {
-        this.setState({
-          balance: Math.round((balance + (payoutRate[betType] * bet)) * 100) / 100,
-        });
-      }
+      const winCondition = isWin(betType, guessingNumber, number);
       const newNumber = getRandomNumber();
       this.setState({
-        betIsProcessing: false,
+        betIsProcessing: true,
         number: newNumber,
         hash: generateHash(newNumber),
+        balance: winCondition ? Math.round((balance + (payoutRate[betType] * bet)) * 100) / 100
+          : substractFromBalance(bet, balance),
         lastRoundResult: {
-          isWin,
+          winCondition,
           number,
         },
+      }, () => {
+        this.setState({
+          betIsProcessing: false,
+        });
       });
     }
   }
 
+  makeAutoBet = (type, bet, autoBetNumber, guessingNumber, payoutRate) => {
+    let currentState = { ...this.state };
+    times(autoBetNumber, (step) => {
+      const newNumber = getRandomNumber();
+      const hash = generateHash(newNumber);
+      const winCondition = isWin(type, guessingNumber, newNumber);
+      const { balance } = currentState;
+      if (bet <= balance) {
+        currentState = {
+          number: newNumber,
+          hash,
+          balance: winCondition ? calcPrize(balance, payoutRate[type], bet)
+            : substractFromBalance(bet, balance),
+          lastRoundResult: {
+            winCondition,
+            number: newNumber,
+          },
+          autoBetHistory: [
+            ...currentState.autoBetHistory,
+            {
+              betNumber: step + 1,
+              betAmount: bet,
+              roundResult: {
+                winCondition,
+                newNumber,
+              },
+              hash,
+              balance: substractFromBalance(bet, balance),
+            },
+          ],
+        };
+      }
+    });
+    this.setState({
+      ...currentState,
+    });
+  }
+
   render() {
-    const { addCredits, makeBet } = this;
+    const { addCredits, makeBet, makeAutoBet } = this;
     const {
       hash,
       number,
@@ -72,7 +111,12 @@ class App extends React.Component {
             <Typography variant="headline" gutterBottom>
               Endpass Dice
             </Typography>
-            <Form makeBet={makeBet} betIsProcessing={betIsProcessing} number={number} />
+            <Form
+              makeAutoBet={makeAutoBet}
+              makeBet={makeBet}
+              betIsProcessing={betIsProcessing}
+              number={number}
+            />
           </Grid>
           <Grid item xs={12} sm={12} md={6}>
             <div>

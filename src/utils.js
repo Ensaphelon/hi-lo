@@ -78,7 +78,7 @@ export const generateHash = number => md5(number.toString());
 
 export const substractFromBalance = (bet, balance) => {
   const result = balance - bet;
-  return result > 0 ? result : 0;
+  return result > 0 ? result : balance;
 };
 
 /**
@@ -92,3 +92,17 @@ export const generateLastRoundResult = (result) => {
   }
   return '';
 };
+
+/**
+ * Checks win condition of current round
+ */
+
+export const isWin = (betType, guessingNumber, number) => (betType === 'hi' && guessingNumber < number)
+  || (betType === 'lo' && guessingNumber > number);
+
+
+/**
+ * Checks win condition of current round
+ */
+
+export const calcPrize = (balance, rate, bet) => Math.round((balance + rate * bet) * 100) / 100;
