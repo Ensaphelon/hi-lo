@@ -5,6 +5,8 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Form from './Form';
+import BetHistory from './BetHistory';
+
 import {
   generateHash,
   getRandomNumber,
@@ -81,7 +83,7 @@ class App extends React.Component {
               betAmount: bet,
               roundResult: {
                 winCondition,
-                newNumber,
+                number: newNumber,
               },
               hash,
               balance: substractFromBalance(bet, balance),
@@ -103,6 +105,7 @@ class App extends React.Component {
       balance,
       betIsProcessing,
       lastRoundResult,
+      autoBetHistory,
     } = this.state;
     return (
       <div className="apps">
@@ -137,6 +140,7 @@ class App extends React.Component {
               <Typography>Provably Fair Hash</Typography>
               <Typography>{hash}</Typography>
             </div>
+            <BetHistory autoBetHistory={autoBetHistory} />
           </Grid>
         </Grid>
       </div>
