@@ -14,6 +14,7 @@ import {
   generateLastRoundResult,
   isWin,
   calcPrize,
+  calcMartingaleBet,
 } from '../utils';
 
 class App extends React.Component {
@@ -27,7 +28,15 @@ class App extends React.Component {
       balance: 100,
       betIsProcessing: false,
       autoBetHistory: [],
+      martingale: false,
     };
+  }
+
+  toggleMartingale = () => {
+    const { martingale } = this.state;
+    this.setState({
+      martingale: !martingale,
+    });
   }
 
   addCredits = () => {
@@ -45,7 +54,7 @@ class App extends React.Component {
         betIsProcessing: true,
         number: newNumber,
         hash: generateHash(newNumber),
-        balance: winCondition ? Math.round((balance + (payoutRate[betType] * bet)) * 100) / 100
+        balance: winCondition ? calcPrize(balance, payoutRate[betType], bet)
           : substractFromBalance(bet, balance),
         lastRoundResult: {
           winCondition,
@@ -60,18 +69,22 @@ class App extends React.Component {
   }
 
   makeAutoBet = (type, bet, autoBetNumber, guessingNumber, payoutRate) => {
+    const { martingale } = this.state;
     let currentState = { ...this.state };
+    let losesNumber = 0;
     times(autoBetNumber, (step) => {
       const newNumber = getRandomNumber();
       const hash = generateHash(newNumber);
       const winCondition = isWin(type, guessingNumber, newNumber);
       const { balance } = currentState;
-      if (bet <= balance) {
+      losesNumber = winCondition ? losesNumber + 1 : losesNumber;
+      const currentBet = martingale ? calcMartingaleBet(bet, losesNumber) : bet;
+      if (currentBet <= balance) {
         currentState = {
           number: newNumber,
           hash,
-          balance: winCondition ? calcPrize(balance, payoutRate[type], bet)
-            : substractFromBalance(bet, balance),
+          balance: winCondition ? calcPrize(balance, payoutRate[type], currentBet)
+            : substractFromBalance(currentBet, balance),
           lastRoundResult: {
             winCondition,
             number: newNumber,
@@ -80,13 +93,13 @@ class App extends React.Component {
             ...currentState.autoBetHistory,
             {
               betNumber: step + 1,
-              betAmount: bet,
+              betAmount: currentBet,
               roundResult: {
                 winCondition,
                 number: newNumber,
               },
               hash,
-              balance: substractFromBalance(bet, balance),
+              balance: substractFromBalance(currentBet, balance),
             },
           ],
         };
@@ -98,7 +111,12 @@ class App extends React.Component {
   }
 
   render() {
-    const { addCredits, makeBet, makeAutoBet } = this;
+    const {
+      addCredits,
+      makeBet,
+      makeAutoBet,
+      toggleMartingale,
+    } = this;
     const {
       hash,
       number,
@@ -106,6 +124,7 @@ class App extends React.Component {
       betIsProcessing,
       lastRoundResult,
       autoBetHistory,
+      martingale,
     } = this.state;
     return (
       <div className="apps">
@@ -119,6 +138,8 @@ class App extends React.Component {
               makeBet={makeBet}
               betIsProcessing={betIsProcessing}
               number={number}
+              martingale={martingale}
+              toggleMartingale={toggleMartingale}
             />
           </Grid>
           <Grid item xs={12} sm={12} md={6}>

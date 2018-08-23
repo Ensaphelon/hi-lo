@@ -3,6 +3,8 @@ import Grid from '@material-ui/core/Grid';
 import Input from '@material-ui/core/Input';
 import FormControl from '@material-ui/core/FormControl';
 import Button from '@material-ui/core/Button';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 import AutoBet from './AutoBet';
 import WinningConditions from './WinningConditions';
 import { getWinningChance, getPayoutRate, correctNumber } from '../utils';
@@ -60,7 +62,12 @@ export default class Form extends React.Component {
 
   render() {
     const { changeBet, changeNumber, submit } = this;
-    const { betIsProcessing, makeAutoBet } = this.props;
+    const {
+      betIsProcessing,
+      makeAutoBet,
+      toggleMartingale,
+      martingale,
+    } = this.props;
     const {
       bet,
       number,
@@ -113,6 +120,16 @@ export default class Form extends React.Component {
             {number ? <WinningConditions winPercentage={winPercentage} payoutRate={payoutRate} number={number} type="lo" /> : '' }
           </Grid>
         </Grid>
+        <FormControlLabel
+          control={(
+            <Checkbox
+              checked={martingale}
+              onChange={toggleMartingale}
+              value="martingale"
+            />
+          )}
+          label="Martingale strategy is active"
+        />
       </form>
     );
   }

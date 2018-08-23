@@ -15,9 +15,9 @@ const BetHistory = (props) => {
   const { autoBetHistory } = props;
   return (
     <List>
-      {autoBetHistory.reverse().map((item, index) => (
-        <ListItem key={item.betNumber}>
-          <ListItemText primary={generateHistoryItem(item, autoBetHistory.length - index)} />
+      {autoBetHistory.map((item, index) => (
+        <ListItem key={index}>
+          <ListItemText primary={generateHistoryItem(item, index + 1)} />
         </ListItem>
       ))}
     </List>
