@@ -29,7 +29,7 @@ export default class Form extends React.Component {
 
   changeBet = (e) => {
     this.setState({
-      bet: e.target.value,
+      bet: parseInt(e.target.value, 10),
     });
   }
 

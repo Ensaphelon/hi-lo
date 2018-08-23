@@ -82,9 +82,9 @@ class App extends React.Component {
       const hash = generateHash(newNumber);
       const winCondition = isWin(type, guessingNumber, newNumber);
       const { balance } = currentState;
-      losesNumber = winCondition ? losesNumber + 1 : losesNumber;
+      losesNumber = winCondition ? losesNumber : losesNumber + 1;
       const currentBet = martingale ? calcMartingaleBet(bet, losesNumber) : bet;
-      if (currentBet <= balance) {
+      if (currentBet <= parseInt(balance, 10)) {
         currentState = {
           number: newNumber,
           hash,
