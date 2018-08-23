@@ -45,6 +45,7 @@ class App extends React.Component {
     this.setState({
       balance: 100,
     });
+    saveBalance(this.state);
   }
 
   makeBet = (bet, guessingNumber, payoutRate, betType) => {
