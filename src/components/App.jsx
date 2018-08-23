@@ -44,8 +44,9 @@ class App extends React.Component {
   addCredits = () => {
     this.setState({
       balance: 100,
+    }, () => {
+      saveBalance(this.state);
     });
-    saveBalance(this.state);
   }
 
   makeBet = (bet, guessingNumber, payoutRate, betType) => {
