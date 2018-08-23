@@ -78,7 +78,7 @@ export const generateHash = number => md5(number.toString());
 
 export const substractFromBalance = (bet, balance) => {
   const result = Math.round((balance - bet) * 100) / 100;
-  return result > 0 ? result : balance;
+  return result > 0 ? result : 0;
 };
 
 /**
@@ -112,3 +112,19 @@ export const calcPrize = (balance, rate, bet) => Math.round((balance + rate * be
  */
 
 export const calcMartingaleBet = (bet, loses) => (2 ** loses) * bet;
+
+
+/**
+ * Get balance from local storage
+ */
+
+export const getBalance = () => {
+  const balance = localStorage.getItem('balance');
+  return balance || 100;
+};
+
+/**
+ * Save the current balance
+ */
+
+export const saveBalance = ({ balance }) => localStorage.setItem('balance', balance);

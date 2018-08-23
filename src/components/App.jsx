@@ -15,6 +15,8 @@ import {
   isWin,
   calcPrize,
   calcMartingaleBet,
+  getBalance,
+  saveBalance,
 } from '../utils';
 
 class App extends React.Component {
@@ -25,7 +27,7 @@ class App extends React.Component {
       hash: generateHash(number),
       number,
       lastRoundResult: null,
-      balance: 100,
+      balance: getBalance(),
       betIsProcessing: false,
       autoBetHistory: [],
       martingale: false,
@@ -61,6 +63,7 @@ class App extends React.Component {
           number,
         },
       }, () => {
+        saveBalance(this.state);
         this.setState({
           betIsProcessing: false,
         });
@@ -105,6 +108,7 @@ class App extends React.Component {
         };
       }
     });
+    saveBalance(currentState);
     this.setState({
       ...currentState,
     });
